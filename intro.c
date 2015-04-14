@@ -201,7 +201,7 @@ void display( void )
 
     // update my global transform
     time += 1;
-    transformMatrix[12] = cos( time / 10.0 );
+    transformMatrix[12] = cos( time / 50.0 );
 
     // swap the buffers -> makes what you rendered to the screen facing buffer
     glutSwapBuffers();
