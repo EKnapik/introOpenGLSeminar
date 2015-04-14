@@ -21,6 +21,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
+
 #include "shaderSetup.h"
 
 
@@ -40,10 +42,10 @@ GLuint transformLocation;
 
 // Define my transform matrix here since this is for seminar
 // Column Major identity matrix
-float transformMatrix = { 1, 0, 0, 0,
-                          0, 1, 0, 0,
-                          0, 0, 1, 0,
-                          0, 0, 0, 1 };
+float transformMatrix[] = { 1, 0, 0, 0,
+                            0, 1, 0, 0,
+                            0, 0, 1, 0,
+                            0, 0, 0, 1 };
 
 
 
@@ -51,20 +53,22 @@ float transformMatrix = { 1, 0, 0, 0,
 // This holds vertex data 4 entries make one vertex
 // Create my vertex data for definining a square
 // I need 24 values because 4 define a point and I have two triangles of 3 points each
-float vertexArray[] = { -0.25, -0.25, -1.0, 1.0,
-                         0.25, -0.25, -1.0, 1.0,
-                        -0.25,  0.25, -1.0, 1.0,
+float vertexArray[] = { -0.25,  0.25, 0.0, 1.0,
+                         0.25, -0.25, 0.0, 1.0,
+                        -0.25, -0.25, 0.0, 1.0,
 
-                         0.25, -0.25, -1.0, 1.0,
-                         0.25,  0.25, -1.0, 1.0,
-                        -0.25,  0.25, -1.0, 1.0 };
+                        -0.25,  0.25, 0.0, 1.0,
+                         0.25,  0.25, 0.0, 1.0,
+                         0.25, -0.25, 0.0, 1.0 };
 
 // This is how the points should be connected
 // or which points make a triangle by default
 // I believe it just goes the next three points make a triangle. 
-float elementArray[] = { 0, 1, 2, 3, 4, 5 };
+GLushort elementArray[] = { 0, 1, 2, 3, 4, 5 };
 
 int numVerts = 6; // this is the total number of verticies
+
+int time = 0;
 
 
 
@@ -194,8 +198,14 @@ void display( void )
     // everything is loaded now draw the shape with current buffers and shader program
     glDrawElements( GL_TRIANGLES, numVerts, GL_UNSIGNED_SHORT, (void *)0);
 
+
+    // update my global transform
+    time += 1;
+    transformMatrix[12] = cos( time / 10.0 );
+
     // swap the buffers -> makes what you rendered to the screen facing buffer
     glutSwapBuffers();
+    glutPostRedisplay();
 }
 
 
@@ -218,10 +228,10 @@ int main( int argc, char *argv[] )
     glClearColor( 101.0/255, 156.0/255, 239.0/255, 1.0 );
 
     // Sets the color of the cull faces to the background color
-    glCullFace( GL_BACK );
+    glCullFace( GL_FRONT );
 
-    // Want to draw wire frames
-    // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    // Want to draw wire frames us GL_LINE
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 
     // Initialize my shaders and shapes to draw
     initPipeline();

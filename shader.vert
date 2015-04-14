@@ -12,7 +12,7 @@ uniform mat4 transform;
 void main()
 {
 
-    gl_Position = currentVertex;
+    gl_Position = transform * currentVertex;
 
 }
 
