@@ -40,6 +40,50 @@ float *elementArray; // This is how the points should be connected
 int numVerts; // this is the total number of verticies
 
 
+
+
+void initPipeline( void )
+{
+
+
+}
+
+
+void initBuffers( void )
+{
+
+}
+
+
+
+// The shader program we are adding this to is global
+void initShader( GLenum type, char *file );
+{
+
+}
+
+
+
+
+
+/**
+* Clear our frame buffers
+* load the values/data for shaders, when loading these it is assumed
+* that the shader program you are loading to is the one currently in use
+*
+* Bind the buffer you want to get your points from
+* draw the points from the buffer in some way
+*
+* load next buffer if you want (draw another object)
+*
+* update your internal representation of object position for collisions and stuff
+* perform all checks that you want
+*
+* unbind any currently bound buffers
+* glFlush();
+*
+* swapBuffers
+**/
 void display( void )
 {
     // clear your frame buffers
@@ -48,7 +92,6 @@ void display( void )
     // swap the buffers -> makes what you rendered to the screen facing buffer
     glutSwapBuffers();
 }
-
 
 
 
