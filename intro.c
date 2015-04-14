@@ -19,6 +19,10 @@
 #include <GLUT/GLUT.h>
 #include <OpenGL/gl.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+#include "shaderSetup.h"
+
 
 #define INITIAL_HEIGHT 512
 #define INITIAL_WIDTH 512
@@ -30,20 +34,30 @@
 GLuint vbuffer, ebuffer;
 GLuint program; // This is the "id" of the shader program
 
+// the location pointers of shader program code
 GLuint vPosition;
+GLuint transformLocation;
+
+// Define my transform matrix here since this is for seminar
+// Column Major identity matrix
+float transformMatrix = { 1, 0, 0, 0,
+                          0, 1, 0, 0,
+                          0, 0, 1, 0,
+                          0, 0, 0, 1 };
+
+
 
 // Define my vertexArray and elementArray
-
 // This holds vertex data 4 entries make one vertex
 // Create my vertex data for definining a square
 // I need 24 values because 4 define a point and I have two triangles of 3 points each
-float vertexArray[] = { -0.25, -0.25, 0.0, 1.0,
-                         0.25, -0.25, 0.0, 1.0,
-                        -0.25,  0.25, 0.0, 1.0,
+float vertexArray[] = { -0.25, -0.25, -1.0, 1.0,
+                         0.25, -0.25, -1.0, 1.0,
+                        -0.25,  0.25, -1.0, 1.0,
 
-                         0.25, -0.25, 0.0, 1.0,
-                         0.25,  0.25, 0.0, 1.0,
-                        -0.25,  0.25, 0.0, 1.0 };
+                         0.25, -0.25, -1.0, 1.0,
+                         0.25,  0.25, -1.0, 1.0,
+                        -0.25,  0.25, -1.0, 1.0 };
 
 // This is how the points should be connected
 // or which points make a triangle by default
@@ -53,34 +67,8 @@ float elementArray[] = { 0, 1, 2, 3, 4, 5 };
 int numVerts = 6; // this is the total number of verticies
 
 
-// This will be the place where we call the shader program creation
-// Connect CPU variables to shader variables
-// and set the initial values for our shader variables
-void initPipeline( void )
-{
 
-
-    // Get the location of our matrix and vertex variables after the
-    // shader program has been compiled and linked
-    //
-    // glGetUniformLocation( shader program, "variableName" );
-    // glGetAttribLocation( shader program, "variableName" );
-    //
-    // uniform variables are ones that can be changed or user controled
-    // like the movement matrix or a simple boolean value
-    //
-    // attrib variables are ones that are refering to vertex data
-    // these are not loaded but simply said how to load them/ interpret from the
-    // ARRAY_BUFFER that is being used
-
-
-    // set the current shader program to use
-    glUseProgram( program );
-
-}
-
-
-void initBuffers( void )
+void createBuffers( )
 {
     // get and load the verticies for your shape
     float *points = vertexArray;
@@ -108,7 +96,7 @@ void initBuffers( void )
 
 
     // Similar process for the connectivity/element data
-    glGenBuffer( 1, &ebuffer );
+    glGenBuffers( 1, &ebuffer );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebuffer );
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, elementDataSize, elements, GL_STATIC_DRAW );
 
@@ -116,7 +104,44 @@ void initBuffers( void )
     // Stop having these buffers bound to the current OpenGL buffers
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
+}
 
+
+// This will be the place where we call the shader program creation
+// Connect CPU variables to shader variables
+// and set the initial values for our shader variables
+void initPipeline( void )
+{
+
+    program = shaderSetup( "shader.vert", "shader.frag" );
+    if( !program )
+    {
+        perror( "ERROR SETTING UP SHADERS\n" );
+        exit(1);
+    }
+
+    // Get the location of our matrix and vertex variables after the
+    // shader program has been compiled and linked
+    //
+    // glGetUniformLocation( shader program, "variableName" );
+    // glGetAttribLocation( shader program, "variableName" );
+    //
+    // uniform variables are ones that can be changed or user controled
+    // like the movement matrix or a simple boolean value
+    //
+    // attrib variables are ones that are refering to vertex data
+    // these are not loaded but simply said how to load them/ interpret from the
+    // ARRAY_BUFFER that is being used
+    vPosition = glGetAttribLocation( program, "currentVertex" ); // the current vertex of shape
+    transformLocation = glGetUniformLocation( program, "transform" ); // transformation matrix
+
+
+    // set the current shader program to use
+    glUseProgram( program );
+
+
+    // create the scene I want to draw
+    createBuffers();
 }
 
 
@@ -135,7 +160,7 @@ void initBuffers( void )
 * perform all checks that you want
 *
 * unbind any currently bound buffers
-* glFlush();
+* glFlush(); // glutSwapBuffers does this
 *
 * swapBuffers
 **/
@@ -159,8 +184,11 @@ void display( void )
     // how to look at my GL_ARRAY_BUFFER for vertex data
     // the object data ID, how many make up one, data type, should I transpose?,
     // step, beginning offset
+
     glEnableVertexAttribArray( vPosition );
     glVertexAttribPointer( vPosition, 4, GL_FLOAT, GL_FALSE, 0, 0 );
+
+    glUniformMatrix4fv( transformLocation, 1, GL_FALSE, &transformMatrix );
 
 
     // everything is loaded now draw the shape with current buffers and shader program
@@ -184,7 +212,7 @@ int main( int argc, char *argv[] )
 
     glEnable( GL_DEPTH_TEST );
     glEnable( GL_CULL_FACE );
-    glShadeModel( GL_SMOOTH ); // This is by default but wanted to show this exists
+    // glShadeModel( GL_SMOOTH ); // This is by default but wanted to show this exists
 
     // Set the background color
     glClearColor( 101.0/255, 156.0/255, 239.0/255, 1.0 );
@@ -194,6 +222,10 @@ int main( int argc, char *argv[] )
 
     // Want to draw wire frames
     // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+    // Initialize my shaders and shapes to draw
+    initPipeline();
+
 
     // Sets up the display function
     glutDisplayFunc( display );
