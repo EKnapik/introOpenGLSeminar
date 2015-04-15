@@ -64,6 +64,10 @@ float vertexArray[] = { -0.5,  0.5, 0.0, 1.0,
 // This is how the points should be connected
 // or which points make a triangle by default
 // I believe it just goes the next three points make a triangle. 
+// since a square is only made out of 4 points we can actually
+// tell openGL to use other points again, this is sometimes called an
+// index buffer also, and it saves repeated data
+// other connectivity: 0, 1, 2, 0, 4, 1
 GLushort elementArray[] = { 0, 1, 2, 3, 4, 5 };
 
 int numVerts = 6; // this is the total number of verticies
