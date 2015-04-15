@@ -201,7 +201,14 @@ void display( void )
 
     // update my global transform
     time += 1;
-    transformMatrix[12] = cos( time / 50.0 );
+    // transformMatrix[12] = cos( time / 50.0 );
+
+    /* Show the rotation around y axis  */
+    transformMatrix[0] = cos( time / 70.0 );
+    transformMatrix[2] = sin( time / 70.0 );
+    transformMatrix[8] = -sin( time / 70.0 );
+    transformMatrix[10] = cos( time / 70.0 );
+    /*                                  */
 
     // swap the buffers -> makes what you rendered to the screen facing buffer
     glutSwapBuffers();
@@ -246,10 +253,16 @@ int main( int argc, char *argv[] )
     // When glutMainLoop(); ends it will exit the program
 }
 
-
+/* SIDE NOTES:                                                            */
 // Sidenote here triangles should be defined counter clockwise if you want
 // them to show up propperly. As OpenGL Defines it the front of a triangle
 // is face that you want when you look at it head on. Define the triangle in
 // counter clockwise vertex ordering so the front face is facing you our out.
+//
+// GLUT is bad because currently it renders as fast as it is allowed and
+// with different/better or slower processors your rendering time will
+// be skewed the timings you set to follow given the frames
+// The propper way to do it is to have a separate thread run then call
+// when to update your frames call a rerender.
 
 
