@@ -2,7 +2,7 @@
 
 // this is an outgoing value
 // later versions have this as "out vec4 color"
-varying vec4 color;
+varying vec4 Color;
 
 void main()
 {
@@ -12,5 +12,8 @@ void main()
 
     // amber monochrome effect
     // gl_FragColor = vec4( 1.0, 0.745, 0.0, 1.0 );
+
+    // Shows interpolation which is kinda cool
+    // gl_FragColor = Color;
 
 }

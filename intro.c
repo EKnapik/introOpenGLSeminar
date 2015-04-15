@@ -53,13 +53,13 @@ float transformMatrix[] = { 1, 0, 0, 0,
 // This holds vertex data 4 entries make one vertex
 // Create my vertex data for definining a square
 // I need 24 values because 4 define a point and I have two triangles of 3 points each
-float vertexArray[] = { -0.25,  0.25, 0.0, 1.0,
-                         0.25, -0.25, 0.0, 1.0,
-                        -0.25, -0.25, 0.0, 1.0,
+float vertexArray[] = { -0.5,  0.5, 0.0, 1.0,
+                         0.5, -0.5, 0.0, 1.0,
+                        -0.5, -0.5, 0.0, 1.0,
 
-                        -0.25,  0.25, 0.0, 1.0,
-                         0.25,  0.25, 0.0, 1.0,
-                         0.25, -0.25, 0.0, 1.0 };
+                        -0.5,  0.5, 0.0, 1.0,
+                         0.5,  0.5, 0.0, 1.0,
+                         0.5, -0.5, 0.0, 1.0 };
 
 // This is how the points should be connected
 // or which points make a triangle by default
@@ -200,14 +200,15 @@ void display( void )
 
 
     // update my global transform
-    time += 1;
-    // transformMatrix[12] = cos( time / 50.0 );
+    //time += 1;
+    //transformMatrix[12] = cos( time / 50.0 );
 
     /* Show the rotation around y axis  */
-    transformMatrix[0] = cos( time / 70.0 );
-    transformMatrix[2] = sin( time / 70.0 );
-    transformMatrix[8] = -sin( time / 70.0 );
-    transformMatrix[10] = cos( time / 70.0 );
+    //transformMatrix[0] = cos( time / 70.0 );
+
+    //transformMatrix[2] = sin( time / 70.0 );
+    //transformMatrix[8] = -sin( time / 70.0 );
+    //transformMatrix[10] = cos( time / 70.0 );
     /*                                  */
 
     // swap the buffers -> makes what you rendered to the screen facing buffer
