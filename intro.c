@@ -215,8 +215,10 @@ void display( void )
     /*                                  */
 
     /* Show a shear transform should be squezing the shape */
+    /*
     transformMatrix[1] = cos( time / 75.0 ); // shear in the y direction
     transformMatrix[4] = 0; // shear in the x direction
+    */
 
     // swap the buffers -> makes what you rendered to the screen facing buffer
     glutSwapBuffers();
