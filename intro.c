@@ -239,6 +239,8 @@ int main( int argc, char *argv[] )
 
     glEnable( GL_DEPTH_TEST );
     glEnable( GL_CULL_FACE );
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     // glShadeModel( GL_SMOOTH ); // This is by default but wanted to show this exists
 
     // Set the background color
